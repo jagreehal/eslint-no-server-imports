@@ -3,6 +3,7 @@
   "displayName": "No Server Imports",
   "description": "Prevent server-only module imports in client code. Works with Next.js, Astro, and SvelteKit.",
   "version": "1.0.0",
+  "private": true,
   "publisher": "jagreehal",
   "engines": {
     "vscode": "^1.85.0"

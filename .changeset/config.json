@@ -10,7 +10,7 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["nextjs-example", "astro-example", "sveltekit-example"]
+  "ignore": ["nextjs-example", "astro-example", "sveltekit-example", "vscode-no-server-imports"]
 }
 
 
