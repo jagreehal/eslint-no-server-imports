@@ -10,8 +10,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import type { DetectedFramework } from 'eslint-plugin-no-server-imports';
-import { clearFrameworkCache } from 'eslint-plugin-no-server-imports';
+import type { DetectedFramework } from './extension';
+import { clearFrameworkCache } from './extension';
 
 // Mock vscode module
 const mockStatusBarItems = new Map<string, any>();

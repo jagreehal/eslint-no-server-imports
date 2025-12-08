@@ -94,10 +94,12 @@ function detectFramework(filePath?: string): DetectedFramework {
   return cachedFramework;
 }
 
-function clearFrameworkCache(): void {
+export function clearFrameworkCache(): void {
   cachedFramework = null;
   cachedProjectRoot = null;
 }
+
+export type { DetectedFramework };
 
 /**
  * Framework information for display in the UI
