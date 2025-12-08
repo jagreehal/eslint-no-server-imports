@@ -1,0 +1,83 @@
+{
+  "name": "vscode-no-server-imports",
+  "displayName": "No Server Imports",
+  "description": "Prevent server-only module imports in client code. Works with Next.js, Astro, and SvelteKit.",
+  "version": "1.0.0",
+  "publisher": "jagreehal",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Linters",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "eslint",
+    "nextjs",
+    "astro",
+    "sveltekit",
+    "server-only",
+    "client-server"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jagreehal/eslint-plugin-no-server-imports"
+  },
+  "bugs": {
+    "url": "https://github.com/jagreehal/eslint-plugin-no-server-imports/issues"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "workspaceContains:**/eslint.config.{js,mjs,cjs,ts}",
+    "workspaceContains:**/.eslintrc.{js,json,yaml,yml}",
+    "workspaceContains:**/next.config.{js,mjs,ts}",
+    "workspaceContains:**/astro.config.{js,mjs,ts}",
+    "workspaceContains:**/svelte.config.{js,ts}"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "noServerImports.showStatus",
+        "title": "No Server Imports: Show Status"
+      },
+      {
+        "command": "noServerImports.detectFramework",
+        "title": "No Server Imports: Detect Framework"
+      },
+      {
+        "command": "noServerImports.openDocs",
+        "title": "No Server Imports: Open Documentation"
+      }
+    ],
+    "configuration": {
+      "title": "No Server Imports",
+      "properties": {
+        "noServerImports.showStatusBarItem": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the framework indicator in the status bar"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "watch": "npm run compile -- --watch",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.106.1",
+    "@types/node": "^24.10.1",
+    "@vscode/test-electron": "^2.5.2",
+    "esbuild": "^0.27.1",
+    "@vscode/vsce": "^3.7.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15",
+    "@vitest/coverage-v8": "^4.0.15"
+  }
+}

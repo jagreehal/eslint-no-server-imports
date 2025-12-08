@@ -1,0 +1,89 @@
+{
+  "name": "eslint-plugin-no-server-imports",
+  "version": "1.0.0",
+  "description": "ESLint plugin that prevents server-only module imports in client code - catch bundling issues in your editor",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "clean": "rm -rf dist lib",
+    "prebuild": "pnpm clean",
+    "prepare": "pnpm build",
+    "prepublishOnly": "pnpm run test && pnpm run lint"
+  },
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "server-only",
+    "client-code",
+    "bundling",
+    "vite",
+    "astro",
+    "nextjs",
+    "tanstack",
+    "ssr",
+    "typescript",
+    "pino",
+    "node-modules"
+  ],
+  "author": "Jag Reehal <jag@jagreehal.com>",
+  "homepage": "https://github.com/jagreehal/eslint-plugin-no-server-imports#readme",
+  "bugs": {
+    "url": "https://github.com/jagreehal/eslint-plugin-no-server-imports/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jagreehal/eslint-plugin-no-server-imports.git"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "eslint": "^9.0.0",
+    "@typescript-eslint/utils": "^8.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@total-typescript/ts-reset": "^0.6.1",
+    "@total-typescript/tsconfig": "^1.0.4",
+    "@types/node": "^24.10.1",
+    "@types/picomatch": "^4.0.2",
+    "@typescript-eslint/eslint-plugin": "^8.48.1",
+    "@typescript-eslint/parser": "^8.48.1",
+    "@typescript-eslint/rule-tester": "^8.48.1",
+    "@typescript-eslint/utils": "^8.48.1",
+    "eslint": "9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-unicorn": "^62.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.1",
+    "vitest": "^4.0.15",
+    "@vitest/coverage-v8": "^4.0.15"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "picomatch": "^4.0.3"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "eslint-no-server-imports-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo for eslint-plugin-no-server-imports with example apps",
+  "scripts": {
+    "build": "pnpm --filter eslint-plugin-no-server-imports build",
+    "test": "pnpm --filter eslint-plugin-no-server-imports test",
+    "test:rule": "tsx scripts/test-rule.ts",
+    "test:rule:sh": "./scripts/test-rule.sh",
+    "lint": "pnpm --filter eslint-plugin-no-server-imports lint",
+    "dev:nextjs": "pnpm --filter nextjs-example dev",
+    "dev:astro": "pnpm --filter astro-example dev",
+    "dev:sveltekit": "pnpm --filter sveltekit-example dev",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "changeset publish",
+    "quality": "pnpm build && pnpm test && pnpm lint && pnpm test:rule"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@10.24.0",
+  "devDependencies": {
+    "@changesets/cli": "^2.29.8",
+    "@changesets/changelog-github": "^0.5.2",
+    "@types/node": "^24.10.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

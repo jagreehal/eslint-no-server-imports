@@ -1,0 +1,19 @@
+---
+// This file should NOT trigger ESLint errors - using type-only imports
+import type { Logger } from 'pino';
+
+const logger: Logger | null = null;
+---
+
+<html>
+  <head>
+    <title>Good Example - Type-only imports</title>
+  </head>
+  <body>
+    <h1>Good Example - Type-only imports are allowed</h1>
+    <p>Logger type: {logger ? 'defined' : 'null'}</p>
+  </body>
+</html>
+
+
+
