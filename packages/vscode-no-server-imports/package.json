@@ -72,7 +72,7 @@
     "publish": "vsce publish"
   },
   "devDependencies": {
-    "@types/vscode": "^1.106.1",
+    "@types/vscode": "^1.107.0",
     "@types/node": "^25.0.2",
     "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.27.1",
