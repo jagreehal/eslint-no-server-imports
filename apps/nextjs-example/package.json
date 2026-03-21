@@ -9,22 +9,22 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.0.10",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "next": "16.2.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@prisma/client": "^7.1.0",
+    "@prisma/client": "^7.5.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@typescript-eslint/utils": "^8.50.0",
+    "@typescript-eslint/utils": "^8.57.1",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.1.1",
+    "eslint-config-next": "16.2.0",
     "eslint-plugin-no-server-imports": "workspace:*",
-    "pino": "^10.1.0",
+    "pino": "^10.3.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -533,10 +533,10 @@ export const rule = createRule<Options, MessageIds>({
     // Create Set for O(1) exact module lookups
     const serverModuleSet = new Set(serverModules);
 
-    const rawFilename = context.getFilename();
+    const rawFilename = context.filename;
     // Normalize Windows paths to POSIX for picomatch (backslashes are treated as escapes)
     const filename = rawFilename.replaceAll('\\', '/');
-    const sourceCode = context.sourceCode ?? context.getSourceCode();
+    const sourceCode = context.sourceCode;
 
     // Track state
     let hasServerOnlyImport = false;
@@ -1049,6 +1049,25 @@ const plugin = {
           {
             clientFilePatterns: FRAMEWORK_DEFAULTS.sveltekit.clientFilePatterns,
             serverFilePatterns: FRAMEWORK_DEFAULTS.sveltekit.serverFilePatterns,
+          },
+        ],
+      },
+    },
+
+    /**
+     * TanStack Start optimized configuration.
+     * Best for TanStack Start projects using createServerFn.
+     */
+    'recommended-tanstack-start': {
+      plugins: ['no-server-imports'],
+      rules: {
+        'no-server-imports/no-server-imports': [
+          'error',
+          {
+            clientFilePatterns: FRAMEWORK_DEFAULTS['tanstack-start'].clientFilePatterns,
+            serverFilePatterns: FRAMEWORK_DEFAULTS['tanstack-start'].serverFilePatterns,
+            checkServerFunctions: true,
+            serverFunctionNames: ['createServerFn', 'createIsomorphicFn', 'createServerOnlyFn'],
           },
         ],
       },

@@ -101,6 +101,25 @@ const testCases: TestCase[] = [
     shouldError: false,
     description: 'SvelteKit: api/test/+server.ts should NOT error (server route)',
   },
+  // TanStack Start
+  {
+    app: 'tanstack-start-example',
+    file: 'src/routes/bad-example.tsx',
+    shouldError: true,
+    description: 'TanStack Start: bad-example.tsx should error (server imports in client)',
+  },
+  {
+    app: 'tanstack-start-example',
+    file: 'src/routes/good-example.tsx',
+    shouldError: false,
+    description: 'TanStack Start: good-example.tsx should NOT error (server imports in createServerFn)',
+  },
+  {
+    app: 'tanstack-start-example',
+    file: 'src/routes/index.tsx',
+    shouldError: false,
+    description: 'TanStack Start: index.tsx should NOT error (no server imports)',
+  },
 ];
 
 interface TestResult {

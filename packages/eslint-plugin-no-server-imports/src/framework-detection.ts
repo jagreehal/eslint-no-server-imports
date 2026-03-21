@@ -8,7 +8,7 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
-export type DetectedFramework = 'next' | 'astro' | 'sveltekit' | 'unknown';
+export type DetectedFramework = 'next' | 'astro' | 'sveltekit' | 'tanstack-start' | 'unknown';
 
 export interface FrameworkDefaults {
   clientFilePatterns: string[];
@@ -59,6 +59,18 @@ export const FRAMEWORK_DEFAULTS: Record<DetectedFramework, FrameworkDefaults> = 
       '**/+server.js',
       '**/+page.server.ts',
       '**/+layout.server.ts',
+    ],
+  },
+  'tanstack-start': {
+    clientFilePatterns: [
+      '**/routes/**',
+      '**/components/**',
+    ],
+    serverFilePatterns: [
+      '**/*.server.ts',
+      '**/*.server.tsx',
+      '**/server/**',
+      '**/api/**',
     ],
   },
   unknown: {
@@ -137,6 +149,9 @@ function checkPackageJsonDependencies(projectRoot: string): DetectedFramework {
     }
     if (allDeps['@sveltejs/kit']) {
       return 'sveltekit';
+    }
+    if (allDeps['@tanstack/react-start']) {
+      return 'tanstack-start';
     }
     if (allDeps['astro']) {
       return 'astro';
