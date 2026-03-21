@@ -1,9 +1,9 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
-  "changelog": "@changesets/changelog-github",
-  "changelogOptions": {
-    "repo": "jagreehal/eslint-plugin-no-server-imports"
-  },
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "jagreehal/eslint-no-server-imports" }
+  ],
   "commit": false,
   "fixed": [],
   "linked": [],
