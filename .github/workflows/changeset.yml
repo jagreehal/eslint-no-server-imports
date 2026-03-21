@@ -25,5 +25,5 @@ jobs:
 
       - name: Check for changeset
         run: |
-          git fetch origin main
+          git fetch origin main:main
           pnpm changeset status
