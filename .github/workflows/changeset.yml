@@ -24,4 +24,6 @@ jobs:
         run: pnpm install
 
       - name: Check for changeset
-        run: pnpm changeset status
+        run: |
+          git fetch origin main
+          pnpm changeset status
