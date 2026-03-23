@@ -20,7 +20,7 @@
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@typescript-eslint/utils": "^8.57.1",
+    "@typescript-eslint/utils": "^8.57.2",
     "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^10",
     "eslint-plugin-no-server-imports": "workspace:*",
