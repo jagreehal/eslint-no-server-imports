@@ -18,7 +18,7 @@
     "@sveltejs/kit": "^2.55.0",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@typescript-eslint/utils": "^8.57.1",
-    "eslint": "^9",
+    "eslint": "^10",
     "eslint-plugin-no-server-imports": "workspace:*",
     "eslint-plugin-svelte": "^3.16.0",
     "pino": "^10.3.1",
