@@ -1,5 +1,11 @@
 # eslint-plugin-no-server-imports
 
+## 1.1.1
+
+### Patch Changes
+
+- [#39](https://github.com/jagreehal/eslint-no-server-imports/pull/39) [`68acf7a`](https://github.com/jagreehal/eslint-no-server-imports/commit/68acf7a4f90f902b02c89ff2976dc7c5afa923d9) Thanks [@jagreehal](https://github.com/jagreehal)! - Migrate the build from tsup to tsdown. The package now ships ESM-only (`dist/index.mjs` with `dist/index.d.mts` types); the CommonJS `require` entry has been removed.
+
 ## 1.1.0
 
 ### Minor Changes
