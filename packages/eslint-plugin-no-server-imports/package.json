@@ -2,14 +2,12 @@
   "name": "eslint-plugin-no-server-imports",
   "version": "1.1.0",
   "description": "ESLint plugin that prevents server-only module imports in client code - catch bundling issues in your editor",
-  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
     }
   },
   "files": [
@@ -17,7 +15,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsdown",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
@@ -54,8 +52,8 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "eslint": "^9.0.0 || ^10.0.0",
-    "@typescript-eslint/utils": "^8.57.1"
+    "@typescript-eslint/utils": "^8.57.1",
+    "eslint": "^9.0.0 || ^10.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -68,14 +66,14 @@
     "@typescript-eslint/parser": "^8.57.1",
     "@typescript-eslint/rule-tester": "^8.57.2",
     "@typescript-eslint/utils": "^8.57.2",
+    "@vitest/coverage-v8": "^4.1.0",
     "eslint": "10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-unicorn": "^63.0.0",
-    "tsup": "^8.5.1",
+    "tsdown": "^0.22.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.1",
-    "vitest": "^4.1.0",
-    "@vitest/coverage-v8": "^4.1.0"
+    "vitest": "^4.1.0"
   },
   "engines": {
     "node": ">=18.0.0"

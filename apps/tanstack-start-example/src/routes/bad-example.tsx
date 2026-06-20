@@ -1,5 +1,8 @@
-// This file should trigger ESLint errors - importing server-only modules in client code
-import fs from 'fs'
+// Every server-only import below is used directly in client component code, so
+// the rule flags it in your editor — catching the leak before it ever reaches a
+// build. (Contrast with good-example.tsx, where the same modules are used safely
+// inside server functions.)
+import fs from 'node:fs'
 import pino from 'pino'
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -10,7 +13,7 @@ export const Route = createFileRoute('/bad-example')({
 function BadExample() {
   const data = fs.readFileSync('package.json', 'utf-8')
   const logger = pino()
-  logger.info('This should not work in client code')
+  logger.info('This would run in the client bundle — exactly what we want to prevent')
 
   return (
     <div>

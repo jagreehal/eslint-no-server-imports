@@ -137,7 +137,7 @@ You still need the [ESLint extension](https://marketplace.visualstudio.com/items
 
 - [Full rule documentation, option reference, and server-module list](./packages/eslint-plugin-no-server-imports/README.md)
 - [VS Code extension walkthrough](./packages/vscode-no-server-imports/README.md)
-- Example apps for Next.js, Astro, and SvelteKit live in `apps/*`
+- Example apps for Next.js, Astro, SvelteKit, and TanStack Start live in `apps/*`
 
 ## Working in this repo
 
@@ -156,12 +156,13 @@ pnpm lint
 pnpm test:rule
 ```
 
-Need to see the rule in action, run ESLint on a specific example?
+To see the rule in action, run ESLint on a specific example. The `bad-example` files error on purpose, so a non-zero exit is expected:
 
 ```bash
 pnpm --filter nextjs-example lint
 pnpm --filter astro-example lint
 pnpm --filter sveltekit-example lint
+pnpm --filter tanstack-start-example lint
 ```
 
 Dev servers:
@@ -169,6 +170,7 @@ Dev servers:
 - `pnpm dev:nextjs`
 - `pnpm dev:astro`
 - `pnpm dev:sveltekit`
+- `pnpm dev:tanstack`
 
 License: MIT.
 
