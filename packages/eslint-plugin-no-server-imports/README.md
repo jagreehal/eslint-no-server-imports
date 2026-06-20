@@ -1,13 +1,10 @@
 # eslint-plugin-no-server-imports
 
-Modern frameworks cram server and client files together. You flip between them fast, review a PR, feel confident…and then the bundle explodes because someone `import prisma from '@prisma/client'` in a component. Builds take minutes. CI nags later. Users see the error first. Meanwhile you're diffing stack traces wondering where your day went.
+Server and client code sit side by side in modern frameworks, so it is easy to `import { PrismaClient } from '@prisma/client'` in a component and never notice. The build fails minutes later, or the bundle ships and breaks in someone's browser. This plugin flags that import in your editor the moment you write it.
 
-This plugin shortens the feedback loop to zero:
-
-- **Write code → see error immediately** - ESLint surfaces violations as you type, not minutes later in a build
-- **Stay in flow** - Fix happens in the same editor where you're working. No context switching, no waiting for bundlers
-- **Builds become boring** - Errors are caught in dev mode, so `npm run build` confirms what you already know instead of surprising you
-- **Productive dev loop** - Write, see feedback, fix, move on. The way it should be.
+- You see the error as you type, not minutes later in a build.
+- You fix it in the editor you are already in, with no context switch.
+- `npm run build` stops surprising you, because the errors are gone before you run it.
 
 ## TL;DR
 
@@ -39,7 +36,8 @@ Done. Blocks `fs`, `prisma`, `pino`, and 100+ server-only modules in client code
 
 ```bash
 pnpm add -D eslint-plugin-no-server-imports @typescript-eslint/utils
-# npm/yarn/bun work too - ESLint 9+ is the only peer dependency.
+# npm, yarn, and bun work too. Peers: ESLint 9 or 10, plus @typescript-eslint/utils.
+# The package ships ESM only, which flat config (eslint.config.mjs) loads natively.
 ```
 
 ```ts
@@ -104,7 +102,9 @@ By default the rule runs in `client-only` mode, meaning "only check paths that l
 - Re-exports (`export * from 'pino'`) ✅
 - Dynamic imports (`await import('pg')`) stay untouched because they're runtime-only.
 
-The rule also understands server function scopes. If every reference to a value import stays inside a callback passed to functions like `createServerFn`, `createIsomorphicFn`, `server$`, `action$`, or `loader$`, it's considered safe. Configure `serverFunctionNames` to teach it your own helpers (Nuxt's `defineEventHandler`, Remix loaders, etc.). Next.js Server Actions aren't special-cased - keep the imports inside the `'use server'` function via `await import(...)` and you're good.
+The rule also understands server function scopes. If every reference to a value import stays inside a callback passed to functions like `createServerFn`, `createIsomorphicFn`, `server$`, `action$`, or `loader$`, the rule treats it as safe. Configure `serverFunctionNames` to teach it your own helpers, such as Nuxt's `defineEventHandler` or Remix loaders. Next.js Server Actions are not special-cased: keep the import inside the `'use server'` function via `await import(...)` and the rule stays quiet.
+
+One thing the rule does **not** do: ban one file from importing another by path. It flags named server-only *modules* (`pino`, `node:fs`, your own `serverModules` entries), not local imports. So in TanStack Start a client route can `import { listUsers } from '../server/users'` to call a `createServerFn` over RPC, and the rule leaves it alone. To catch a genuine leak, add the Node-only package a component should never touch (a database client, a telemetry provider) to `serverModules`, or keep that code under a `serverFilePatterns` path. See the [TanStack Start example](../../apps/tanstack-start-example) for a working setup.
 
 ### What remains allowed
 
@@ -372,19 +372,19 @@ The extension works alongside the [ESLint VS Code extension](https://marketplace
 
 **Does this replace the `server-only` runtime guard?**
 
-No - keep it for defense in depth. This rule stops mistakes earlier; the runtime guard still protects you if someone bypasses linting. Think of it like wearing both a seatbelt and having airbags.
+No. Keep the runtime guard for defense in depth. This rule catches the mistake earlier, in the editor; the runtime guard still protects you if someone bypasses linting.
 
 **Will it slow down ESLint?**
 
-Nope. The rule only inspects files whose path matches the client patterns, and the AST work is limited to imports/exports/server-function calls. Expect negligible overhead compared to `typescript-eslint` itself. We're pretty efficient about this.
+No. The rule inspects only files whose path matches the client patterns, and the AST work covers imports, exports, and server-function calls. Overhead is negligible next to `typescript-eslint` itself.
 
 **How do I allow a specific file?**
 
-Use `ignoreFiles` with any glob, or drop a `/* eslint-disable no-server-imports/no-server-imports */` pragma if you absolutely must. But really, try to fix the underlying issue first - that's usually the better path.
+Use `ignoreFiles` with any glob, or add a `/* eslint-disable no-server-imports/no-server-imports */` pragma. Fix the underlying import first when you can.
 
 **What if my framework isn't supported?**
 
-We've got defaults for Next.js, Astro, SvelteKit, TanStack Start, Remix, and SolidStart. If your framework uses different patterns, just configure `clientFilePatterns` and `serverFilePatterns` to match your setup. It's pretty flexible.
+The rule ships defaults for Next.js, Astro, SvelteKit, TanStack Start, Remix, and SolidStart. For anything else, set `clientFilePatterns` and `serverFilePatterns` to match your layout and `serverFunctionNames` to match your server helpers.
 
 ## Contributing & support
 

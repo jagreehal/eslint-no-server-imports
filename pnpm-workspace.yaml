@@ -2,3 +2,9 @@ packages:
   - 'packages/*'
   - 'apps/*'
 
+# Save dependencies with exact versions (no ^ or ~ prefix)
+saveExact: true
+
+# Supply-chain cooldown: only install package versions published at least
+# 3 days ago (4320 minutes), giving time for compromised releases to be caught.
+minimumReleaseAge: 4320

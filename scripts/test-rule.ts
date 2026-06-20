@@ -120,6 +120,13 @@ const testCases: TestCase[] = [
     shouldError: false,
     description: 'TanStack Start: index.tsx should NOT error (no server imports)',
   },
+  {
+    app: 'tanstack-start-example',
+    file: 'src/server/files.ts',
+    shouldError: false,
+    description:
+      'TanStack Start: server/files.ts should NOT error (server-only module, exempt)',
+  },
 ];
 
 interface TestResult {

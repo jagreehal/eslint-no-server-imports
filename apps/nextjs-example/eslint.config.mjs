@@ -24,8 +24,21 @@ const eslintConfig = defineConfig([
       "no-server-imports/no-server-imports": [
         "error",
         {
+          // app/ defaults to Server Components, but we check it as client code
+          // for safety — a stray "use client" or a Client Component shouldn't be
+          // able to pull in a Node-only module. Keep server work in Server
+          // Actions ("use server") or behind a dynamic import().
           clientFilePatterns: ["**/app/**", "**/components/**"],
+
+          // Files that are genuinely server-only and so exempt from the rule.
           serverFilePatterns: ["**/*.server.{ts,tsx,js}", "**/api/**"],
+
+          // The rule bans genuinely Node-only *modules* (node:* built-ins, pino,
+          // database drivers, …) from client code — not file-to-file imports, so
+          // importing a Server Action from a client component is never flagged.
+          // Add project-specific server-only packages here to catch the next
+          // leak in the editor, e.g.:
+          //   serverModules: ["nodemailer", "ioredis"],
         },
       ],
     },
