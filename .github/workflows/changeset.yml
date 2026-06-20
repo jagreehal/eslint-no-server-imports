@@ -24,6 +24,12 @@ jobs:
         run: pnpm install
 
       - name: Check for changeset
+        # The changesets bot's release PR (changeset-release/main) consumes the
+        # changeset files and bumps versions, so this gate would always fail on
+        # it. Merging that PR *is* the release, so skip the check there. This is
+        # a step-level skip (not job-level) so the job still reports success,
+        # which keeps the check green if it's a required status check.
+        if: github.head_ref != 'changeset-release/main'
         run: |
           git fetch origin main:main
           pnpm changeset status
