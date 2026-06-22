@@ -16,7 +16,7 @@
   "devDependencies": {
     "@prisma/client": "^7.5.0",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^25",
+    "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typescript-eslint/utils": "^8.57.2",
