@@ -16,6 +16,14 @@ export default tseslint.config(
       "unicorn/prevent-abbreviations": "off",
       "unicorn/consistent-function-scoping": "off",
       "unicorn/no-null": "off",
+      // New in eslint-plugin-unicorn 68 (bumped from 63); the codebase
+      // predates them. Revisit individually outside feature work.
+      "unicorn/name-replacements": "off",
+      "unicorn/consistent-boolean-name": "off",
+      "unicorn/no-top-level-assignment-in-function": "off",
+      "unicorn/no-break-in-nested-loop": "off",
+      "unicorn/no-declarations-before-early-exit": "off",
+      "unicorn/no-useless-recursion": "off",
     },
   },
 );
