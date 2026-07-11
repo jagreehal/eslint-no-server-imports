@@ -1,8 +1,14 @@
 // GOOD EXAMPLE: Database Access Pattern
 // This demonstrates the CORRECT way to access databases in Next.js
 
-// Type imports are safe - they're erased at compile time
-import type { User } from '@prisma/client';
+// Type imports are safe - they're erased at compile time. In a real app this
+// would come from your generated Prisma client, e.g.:
+//   import type { User } from '@prisma/client';
+// (this example has no Prisma schema, so the type is defined inline)
+interface User {
+  id: string;
+  name: string;
+}
 
 // This is a Server Component by default in Next.js App Router
 // Server Components CAN use server-only modules, but this file

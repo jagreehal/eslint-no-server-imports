@@ -182,6 +182,21 @@ export interface RuleOptions {
   mode?: 'client-only' | 'all-non-server';
   /** Next.js serverExternalPackages - merged into serverModules (for Next.js projects) */
   serverExternalPackages?: string[];
+  /**
+   * When true, the `'use client'` directive (not the file path) decides whether a
+   * file is client code. A file that declares `'use client'` is always checked,
+   * even outside clientFilePatterns; a file WITHOUT the directive that matches
+   * serverComponentPatterns is treated as a React Server Component and skipped
+   * (it may legitimately import server-only modules). Designed for the Next.js
+   * App Router, where client and server components are intermixed by path.
+   */
+  directiveAware?: boolean;
+  /**
+   * Path patterns that are React Server Components by default and are only
+   * checked when they declare `'use client'`. Only used when `directiveAware`
+   * is true. Defaults to `clientFilePatterns`.
+   */
+  serverComponentPatterns?: string[];
 }
 
 type MessageIds =
@@ -488,6 +503,17 @@ export const rule = createRule<Options, MessageIds>({
             items: { type: 'string' },
             description: 'Next.js serverExternalPackages to treat as server-only',
           },
+          directiveAware: {
+            type: 'boolean',
+            description:
+              "Treat a file as client code only when it declares 'use client'; skip Server Components (matching serverComponentPatterns) that omit it",
+          },
+          serverComponentPatterns: {
+            type: 'array',
+            items: { type: 'string' },
+            description:
+              "Path patterns checked only when they declare 'use client' (requires directiveAware; defaults to clientFilePatterns)",
+          },
         },
         additionalProperties: false,
       },
@@ -529,6 +555,11 @@ export const rule = createRule<Options, MessageIds>({
     ];
     const reportUnusedImports = options.reportUnusedImports ?? true;
     const mode = options.mode || 'client-only';
+    const directiveAware = options.directiveAware ?? false;
+    // Server Components live in the same dirs as client components, so default to
+    // clientFilePatterns: within those dirs, only 'use client' files are checked.
+    const serverComponentPatterns =
+      options.serverComponentPatterns || clientFilePatterns;
 
     // Create Set for O(1) exact module lookups
     const serverModuleSet = new Set(serverModules);
@@ -578,6 +609,15 @@ export const rule = createRule<Options, MessageIds>({
      */
     function isClientFile(): boolean {
       const isMatch = picomatch(clientFilePatterns);
+      return isMatch(filename);
+    }
+
+    /**
+     * Checks if the file is a React Server Component by path (used only in
+     * directiveAware mode to skip files that omit the 'use client' directive).
+     */
+    function isServerComponentFile(): boolean {
+      const isMatch = picomatch(serverComponentPatterns);
       return isMatch(filename);
     }
 
@@ -677,11 +717,24 @@ export const rule = createRule<Options, MessageIds>({
       return {};
     }
 
+    // Directive-aware selection (Next.js App Router): the 'use client' directive,
+    // not the path, decides whether a file is client code. A file that declares
+    // 'use client' is always checked; a Server Component (matches
+    // serverComponentPatterns) that omits it may import server-only modules.
+    const isDirectiveClient =
+      directiveAware && hasUseClientDirective(sourceCode);
+    if (directiveAware && !isDirectiveClient && isServerComponentFile()) {
+      return {};
+    }
+
     // File selection based on mode
-    if (mode === 'client-only' && // Only check files matching clientFilePatterns
-      !isClientFile()) {
-        return {};
-      }
+    if (
+      mode === 'client-only' && // Only check files matching clientFilePatterns
+      !isClientFile() &&
+      !isDirectiveClient // a 'use client' file is client even outside clientFilePatterns
+    ) {
+      return {};
+    }
     // mode === 'all-non-server': check all files except server files (already filtered above)
 
     // Track require() calls with their variables (like imports)

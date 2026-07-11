@@ -17,6 +17,12 @@ const eslintConfig = defineConfig([
         tsconfigRootDir: __dirname,
       },
     },
+    settings: {
+      // eslint-plugin-react's automatic version detection calls
+      // context.getFilename(), which ESLint 10 removed — pin the version so
+      // detection never runs.
+      react: { version: "19.2" },
+    },
     plugins: {
       "no-server-imports": noServerImports,
     },
@@ -39,6 +45,23 @@ const eslintConfig = defineConfig([
           // Add project-specific server-only packages here to catch the next
           // leak in the editor, e.g.:
           //   serverModules: ["nodemailer", "ioredis"],
+        },
+      ],
+    },
+  },
+  {
+    // Directive-aware mode: within this directory the 'use client' directive —
+    // not the file path — decides what is client code. Files that declare
+    // 'use client' are checked; files that omit it are React Server Components
+    // and may import server-only modules.
+    files: ["**/app/directive-aware/**"],
+    rules: {
+      "no-server-imports/no-server-imports": [
+        "error",
+        {
+          clientFilePatterns: ["**/app/**", "**/components/**"],
+          serverFilePatterns: ["**/*.server.{ts,tsx,js}", "**/api/**"],
+          directiveAware: true,
         },
       ],
     },
