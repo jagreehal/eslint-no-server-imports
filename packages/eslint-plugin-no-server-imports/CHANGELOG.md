@@ -1,5 +1,20 @@
 # eslint-plugin-no-server-imports
 
+## 1.2.0
+
+### Minor Changes
+
+- [#77](https://github.com/jagreehal/eslint-no-server-imports/pull/77) [`6f47897`](https://github.com/jagreehal/eslint-no-server-imports/commit/6f47897ef0072626dfd4c4736173324d6b7077b6) Thanks [@jagreehal](https://github.com/jagreehal)! - Add `directiveAware` and `serverComponentPatterns` options for the Next.js App Router.
+
+  When `directiveAware: true`, the `'use client'` directive — not the file path —
+  decides whether a file is client code. A file that declares `'use client'` is
+  always checked (even outside `clientFilePatterns`), while a file matching
+  `serverComponentPatterns` (default: `clientFilePatterns`) that omits the
+  directive is treated as a React Server Component and skipped, so it may
+  legitimately import server-only modules. This removes the false positives you
+  would otherwise get when client and server components share the same directories
+  (e.g. `app/`, `components/`).
+
 ## 1.1.1
 
 ### Patch Changes
