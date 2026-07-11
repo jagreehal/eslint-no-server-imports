@@ -866,3 +866,68 @@ ruleTester.run('no-server-imports - require with serverExternalPackages', plugin
     },
   ],
 });
+
+ruleTester.run(
+  'no-server-imports - directiveAware (Next.js App Router)',
+  plugin.rules['no-server-imports'],
+  {
+    valid: [
+      // Server Component (no 'use client') under components/ may import server modules
+      {
+        code: `import { PrismaClient } from '@prisma/client';`,
+        filename: '/app/src/components/user-list.tsx',
+        options: [{ directiveAware: true }],
+      },
+      // Server Component under app/ may import a server-only alias
+      {
+        code: `import { db } from '@/lib/db';`,
+        filename: '/app/src/app/dashboard/page.tsx',
+        options: [
+          { directiveAware: true, serverModules: ['@/lib/db'] },
+        ],
+      },
+      // Explicit serverComponentPatterns: server component there is skipped
+      {
+        code: `import pino from 'pino';`,
+        filename: '/app/src/features/report.tsx',
+        options: [
+          {
+            directiveAware: true,
+            serverComponentPatterns: ['**/features/**'],
+          },
+        ],
+      },
+      // Type-only imports remain safe even in a 'use client' file
+      {
+        code: `'use client';\nimport type { PrismaClient } from '@prisma/client';`,
+        filename: '/app/src/components/counter.tsx',
+        options: [{ directiveAware: true }],
+      },
+    ],
+    invalid: [
+      // 'use client' file under components/ importing a server module - BLOCKED
+      {
+        code: `'use client';\nimport { PrismaClient } from '@prisma/client';`,
+        filename: '/app/src/components/counter.tsx',
+        options: [{ directiveAware: true }],
+        // 'use client' files get no server-only marker suggestion (they conflict)
+        errors: [{ messageId: 'serverOnlyImport', suggestions: 0 }],
+      },
+      // 'use client' file OUTSIDE clientFilePatterns is still checked (directive wins)
+      {
+        code: `'use client';\nimport pino from 'pino';`,
+        filename: '/app/src/lib/use-logger.ts',
+        options: [{ directiveAware: true }],
+        errors: [{ messageId: 'serverOnlyImport', suggestions: 0 }],
+      },
+      // Sanity: without directiveAware the same server component IS flagged
+      {
+        code: `import { PrismaClient } from '@prisma/client';`,
+        filename: '/app/src/components/user-list.tsx',
+        errors: [
+          { messageId: 'serverOnlyImport', suggestions: importSuggestions },
+        ],
+      },
+    ],
+  }
+);

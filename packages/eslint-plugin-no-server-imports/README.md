@@ -276,6 +276,21 @@ For most projects, the defaults work out of the box. You only need to configure 
 - **Example**: `serverExternalPackages: ['my-native-package', '@my-org/server-lib']` (typically read from `next.config.js`)
 - **Note**: This is merged with `serverModules`, so you can use both options together. Primarily useful for Next.js projects.
 
+#### `directiveAware` (optional)
+
+- **Type**: `boolean`
+- **Default**: `false`
+- **What it does**: Makes the `'use client'` directive — not the file path — decide whether a file is client code. A file that declares `'use client'` is always checked (even outside `clientFilePatterns`); a file matching `serverComponentPatterns` that omits the directive is treated as a React Server Component and skipped, so it may import server-only modules.
+- **Why it exists**: In the Next.js App Router, client and server components live in the same directories (`app/`, `components/`). Pure path matching can't tell them apart, so it would flag every Server Component that legitimately imports server-only code. `directiveAware` uses the one signal that actually distinguishes them.
+- **Example**: `directiveAware: true`
+
+#### `serverComponentPatterns` (optional)
+
+- **Type**: `string[]`
+- **Default**: falls back to `clientFilePatterns`
+- **What it does**: Path patterns that are React Server Components by default and are only checked when they declare `'use client'`. Only used when `directiveAware` is `true`.
+- **Example**: `serverComponentPatterns: ['**/app/**', '**/src/app/**', '**/components/**']`
+
 ### Common tweaks
 
 - **Next.js root `app/`**: `clientFilePatterns: ['**/app/**', '**/pages/**', '**/components/**']`
