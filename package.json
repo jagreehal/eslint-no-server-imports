@@ -28,7 +28,7 @@
     "@changesets/cli": "^2.30.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@types/node": "^26.1.1",
-    "tsx": "^4.23.0",
+    "tsx": "^4.23.1",
     "typescript": "^7.0.2"
   }
 }
