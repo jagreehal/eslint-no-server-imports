@@ -1,3 +1,5 @@
+| `import fs = require('fs')` | Yes | ❌ error |
+| `import type Db = require('better-sqlite3')` | No | ✅ allowed |
 # eslint-plugin-no-server-imports
 
 Server and client code sit side by side in modern frameworks, so it is easy to `import { PrismaClient } from '@prisma/client'` in a component and never notice. The build fails minutes later, or the bundle ships and breaks in someone's browser. This plugin flags that import in your editor the moment you write it.
@@ -99,6 +101,8 @@ By default the rule runs in `client-only` mode, meaning "only check paths that l
 - Static `import` and `export { ... } from` usage of server modules ✅
 - Side-effect imports like `import 'fs'` ✅
 - CommonJS `require('pg')` ✅ (the rule even tracks destructuring)
+- TypeScript import-equals (`import pg = require('pg')`) ✅. `import type X = require(...)` is erased at compile time, so the rule allows it.
+- A locally declared `require` (a function or parameter named `require`) is not CommonJS, so the rule ignores it.
 - Re-exports (`export * from 'pino'`) ✅
 - Dynamic imports (`await import('pg')`) stay untouched because they're runtime-only.
 
@@ -195,6 +199,7 @@ For most projects, the defaults work out of the box. You only need to configure 
 - **Why it exists**: Server files can safely import server-only modules, so we skip checking them entirely. This improves performance and prevents false positives.
 - **Example**: `serverFilePatterns: ['**/backend/**', '**/server/**', '**/*.server.ts']`
 - **Note**: Patterns are **merged** with defaults (not replaced). Use glob patterns compatible with `picomatch`.
+- **Note**: Every pattern option matches paths inside dot-directories, so `**/app/**` covers `.next/app/page.tsx` too.
 
 #### `clientFilePatterns` (optional)
 
@@ -280,7 +285,7 @@ For most projects, the defaults work out of the box. You only need to configure 
 
 - **Type**: `boolean`
 - **Default**: `false`
-- **What it does**: Makes the `'use client'` directive — not the file path — decide whether a file is client code. A file that declares `'use client'` is always checked (even outside `clientFilePatterns`); a file matching `serverComponentPatterns` that omits the directive is treated as a React Server Component and skipped, so it may import server-only modules.
+- **What it does**: Makes the `'use client'` directive, not the file path, decide whether a file is client code. A file that declares `'use client'` is always checked (even outside `clientFilePatterns`); a file matching `serverComponentPatterns` that omits the directive is treated as a React Server Component and skipped, so it may import server-only modules.
 - **Why it exists**: In the Next.js App Router, client and server components live in the same directories (`app/`, `components/`). Pure path matching can't tell them apart, so it would flag every Server Component that legitimately imports server-only code. `directiveAware` uses the one signal that actually distinguishes them.
 - **Example**: `directiveAware: true`
 

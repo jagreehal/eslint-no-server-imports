@@ -867,6 +867,162 @@ ruleTester.run('no-server-imports - require with serverExternalPackages', plugin
   ],
 });
 
+// Edge cases
+ruleTester.run('no-server-imports - edge cases 2', plugin.rules['no-server-imports'], {
+  valid: [
+    // TypeScript import-equals of a TYPE is erased at compile time
+    {
+      code: `import type Database = require('better-sqlite3');`,
+      filename: '/app/src/routes/index.tsx',
+    },
+    // A locally shadowed `require` is not CommonJS module loading
+    {
+      code: `function require(m: string) { return {}; }\nconst fs = require('fs');\nexport const x = fs;`,
+      filename: '/app/src/routes/index.tsx',
+    },
+    // Optional chaining on the server function chain still creates a safe scope
+    {
+      code: `import pino from 'pino';\nconst fn = createServerFn?.().handler(() => { pino.info('ok'); });`,
+      filename: '/app/src/routes/index.tsx',
+    },
+    // FunctionExpression (non-arrow) callbacks are also recognised
+    {
+      code: `import pino from 'pino';\nconst fn = createServerFn().handler(function () { pino.info('log'); });`,
+      filename: '/app/src/routes/index.tsx',
+    },
+    // Type-only default and namespace imports are erased at compile time
+    {
+      name: 'type-only default import',
+      code: `import type Pino from 'pino';`,
+      filename: '/app/src/routes/index.tsx',
+    },
+    {
+      name: 'type-only namespace import',
+      code: `import type * as Fs from 'fs';`,
+      filename: '/app/src/routes/index.tsx',
+    },
+    // 'use client' AFTER a non-directive statement is not part of the directive
+    // prologue, so in directiveAware mode the file still counts as a Server
+    // Component (matching serverComponentPatterns) and is skipped
+    {
+      name: "misplaced 'use client' does not count as directive",
+      code: `const a = 1;\n'use client';\nimport { PrismaClient } from '@prisma/client';`,
+      filename: '/app/src/components/counter.tsx',
+      options: [{ directiveAware: true }],
+    },
+  ],
+
+  invalid: [
+    // Value default import combined with an inline type specifier is a value import
+    {
+      name: 'mixed default value + inline type named',
+      code: `import pino, { type Logger } from 'pino';\npino();`,
+      filename: '/app/src/routes/index.tsx',
+      errors: [{ messageId: 'serverOnlyImport', suggestions: importSuggestions }],
+    },
+    // Mixed type/value named re-export is a value export
+    {
+      name: 'mixed type/value named re-export',
+      code: `export { type Logger, info } from 'pino';`,
+      filename: '/app/src/routes/index.tsx',
+      errors: [{ messageId: 'serverOnlyImport', suggestions: reexportSuggestions }],
+    },
+    // TypeScript import-equals value import must be caught
+    {
+      name: 'import equals require is caught',
+      code: `import fs = require('fs');\nexport const read = fs.readFileSync;`,
+      filename: '/app/src/routes/index.tsx',
+      errors: [{ messageId: 'serverOnlyRequire', suggestions: requireSuggestions }],
+    },
+    {
+      name: 'unused import-equals require is caught',
+      code: `import fs = require('fs');`,
+      filename: '/app/src/routes/index.tsx',
+      errors: [{ messageId: 'serverOnlyRequire', suggestions: requireSuggestions }],
+    },
+    // export * as ns from a server module
+    {
+      name: 'export * as ns from server module is caught',
+      code: `export * as fs from 'fs';`,
+      filename: '/app/src/routes/index.tsx',
+      errors: [{ messageId: 'serverOnlyImport', suggestions: reexportSuggestions }],
+    },
+    // Windows-style absolute paths are normalized before glob matching
+    {
+      name: 'windows backslash paths are matched like posix',
+      code: `import pino from 'pino';`,
+      filename: String.raw`C:\app\src\routes\index.tsx`,
+      errors: [{ messageId: 'serverOnlyImport', suggestions: importSuggestions }],
+    },
+    // Full message text assertion
+    {
+      name: 'full error message for imports',
+      code: `import pino from 'pino';`,
+      filename: '/app/src/routes/index.tsx',
+      errors: [
+        {
+          message: `Server-only module "pino" imported in client code. Use dynamic import in a server function: const mod = await import("pino")`,
+          suggestions: importSuggestions,
+        },
+      ],
+    },
+    {
+      name: 'full error message for requires',
+      code: `const pino = require('pino');`,
+      filename: '/app/src/routes/index.tsx',
+      errors: [
+        {
+          message: `Server-only module "pino" required in client code. Use dynamic import in a server function instead.`,
+          suggestions: requireSuggestions,
+        },
+      ],
+    },
+  ],
+});
+
+// Suggestion insertion respects shebangs and leading comments
+ruleTester.run(
+  'no-server-imports - suggestion insertion positions',
+  plugin.rules['no-server-imports'],
+  {
+    valid: [],
+    invalid: [
+      {
+        name: 'inserts after shebang',
+        code: `#!/usr/bin/env node\nimport pino from 'pino';`,
+        filename: '/app/src/routes/index.tsx',
+        errors: [
+          {
+            messageId: 'serverOnlyImport',
+            suggestions: [
+              {
+                messageId: 'suggestServerOnlyMarker',
+                output: `#!/usr/bin/env node\nimport 'server-only';\nimport pino from 'pino';`,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'inserts after comment block before first statement',
+        code: `/* Copyright notice */\nimport fs from 'fs';`,
+        filename: '/app/src/routes/index.tsx',
+        errors: [
+          {
+            messageId: 'serverOnlyImport',
+            suggestions: [
+              {
+                messageId: 'suggestServerOnlyMarker',
+                output: `/* Copyright notice */\nimport 'server-only';\nimport fs from 'fs';`,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  }
+);
+
 ruleTester.run(
   'no-server-imports - directiveAware (Next.js App Router)',
   plugin.rules['no-server-imports'],

@@ -1,9 +1,9 @@
 /**
- * Framework Auto-Detection
- * ========================
- * Automatically detects the frontend framework being used and provides
- * optimal default configurations for the no-server-imports rule.
- */
+Framework Auto-Detection
+========================
+Automatically detects the frontend framework being used and provides
+optimal default configurations for the no-server-imports rule.
+*/
 
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
@@ -16,8 +16,8 @@ export interface FrameworkDefaults {
 }
 
 /**
- * Framework-specific default configurations
- */
+Framework-specific default configurations
+*/
 export const FRAMEWORK_DEFAULTS: Record<DetectedFramework, FrameworkDefaults> = {
   next: {
     clientFilePatterns: [
@@ -93,8 +93,8 @@ export const FRAMEWORK_DEFAULTS: Record<DetectedFramework, FrameworkDefaults> = 
 };
 
 /**
- * Finds the root directory of the project by looking for package.json
- */
+Finds the root directory of the project by looking for package.json
+*/
 function findProjectRoot(startDir: string): string | null {
   let current = startDir;
 
@@ -110,24 +110,24 @@ function findProjectRoot(startDir: string): string | null {
 }
 
 /**
- * Checks if a config file exists with any common extension
- */
+Checks if a config file exists with any common extension
+*/
 function configExists(dir: string, baseName: string): boolean {
   const extensions = ['.js', '.mjs', '.cjs', '.ts', '.mts'];
   return extensions.some(ext => existsSync(path.join(dir, `${baseName}${ext}`)));
 }
 
 /**
- * Package.json structure for dependency checking
- */
+Package.json structure for dependency checking
+*/
 interface PackageJson {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
 }
 
 /**
- * Reads package.json and checks for framework dependencies
- */
+Reads package.json and checks for framework dependencies
+*/
 function checkPackageJsonDependencies(projectRoot: string): DetectedFramework {
   const packageJsonPath = path.join(projectRoot, 'package.json');
 
@@ -164,8 +164,8 @@ function checkPackageJsonDependencies(projectRoot: string): DetectedFramework {
 }
 
 /**
- * Detects the framework by checking config files
- */
+Detects the framework by checking config files
+*/
 function checkConfigFiles(projectRoot: string): DetectedFramework {
   // Check for framework-specific config files (most reliable)
   if (configExists(projectRoot, 'next.config')) {
@@ -177,7 +177,6 @@ function checkConfigFiles(projectRoot: string): DetectedFramework {
   if (configExists(projectRoot, 'astro.config')) {
     return 'astro';
   }
-
   return 'unknown';
 }
 
@@ -186,8 +185,8 @@ let cachedFramework: DetectedFramework | null = null;
 let cachedProjectRoot: string | null = null;
 
 /**
- * Determines if a path is a directory
- */
+Determines if a path is a directory
+*/
 function isDirectory(filePath: string): boolean {
   try {
     return existsSync(filePath) && statSync(filePath).isDirectory();
@@ -197,15 +196,15 @@ function isDirectory(filePath: string): boolean {
 }
 
 /**
- * Detects the framework being used in the project.
- *
- * Detection priority:
- * 1. Config files (most reliable): next.config.*, astro.config.*, svelte.config.*
- * 2. Package.json dependencies: "next", "astro", "@sveltejs/kit"
- *
- * @param filePath - Path to a file or directory in the project (used to find project root)
- * @returns The detected framework or 'unknown'
- */
+Detects the framework being used in the project.
+
+Detection priority:
+1. Config files (most reliable): next.config.*, astro.config.*, svelte.config.*
+2. Package.json dependencies: "next", "astro", "@sveltejs/kit"
+
+@param filePath - Path to a file or directory in the project (used to find project root)
+@returns The detected framework or 'unknown'
+*/
 export function detectFramework(filePath?: string): DetectedFramework {
   // Try to find project root from the file path or cwd
   // If filePath is a directory, use it directly; if it's a file, use its parent
@@ -240,19 +239,19 @@ export function detectFramework(filePath?: string): DetectedFramework {
 }
 
 /**
- * Gets the default configuration for the detected framework.
- *
- * @param filePath - Path to a file in the project (used for detection)
- * @returns Framework-specific defaults
- */
+Gets the default configuration for the detected framework.
+
+@param filePath - Path to a file in the project (used for detection)
+@returns Framework-specific defaults
+*/
 export function getFrameworkDefaults(filePath?: string): FrameworkDefaults {
   const framework = detectFramework(filePath);
   return FRAMEWORK_DEFAULTS[framework];
 }
 
 /**
- * Clears the cached framework detection (useful for testing)
- */
+Clears the cached framework detection (useful for testing)
+*/
 export function clearFrameworkCache(): void {
   cachedFramework = null;
   cachedProjectRoot = null;

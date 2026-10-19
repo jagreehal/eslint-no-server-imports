@@ -116,6 +116,7 @@ Quick fixes currently offer to insert `import 'server-only';` above your code wh
 Some tips from lived-in projects:
 
 - Next.js root-level `app/`: set `clientFilePatterns` to include `'**/app/**'`.
+- Next.js App Router with client and server components side by side? Set `directiveAware: true` and the `'use client'` directive decides which files get checked.
 - Want every shared util checked? use `mode: 'all-non-server'`.
 - Using `serverExternalPackages` in `next.config.js`? Pass the same array here so ESLint and Next agree.
 
