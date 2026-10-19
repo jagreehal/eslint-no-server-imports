@@ -408,7 +408,7 @@ The rule ships defaults for Next.js, Astro, SvelteKit, TanStack Start, Remix, an
 
 ## Contributing & support
 
-Issues and feature requests live at [GitHub Issues](https://github.com/jagreehal/eslint-plugin-no-server-imports/issues). Feel free to open a PR if your framework uses a different server function name - we're happy to add sensible defaults.
+Issues and feature requests live at [GitHub Issues](https://github.com/jagreehal/eslint-no-server-imports/issues). Feel free to open a PR if your framework uses a different server function name - we're happy to add sensible defaults.
 
 Want to see it in action? Check out the [monorepo examples](../../README.md) with working Next.js, Astro, and SvelteKit setups.
 

@@ -118,25 +118,25 @@ const FRAMEWORK_INFO: Record<DetectedFramework, FrameworkInfo> = {
     name: 'Next.js',
     // Using 'symbol-event' - valid Codicon for Next.js (event-driven framework)
     icon: '$(symbol-event)',
-    docUrl: 'https://github.com/jagreehal/eslint-plugin-no-server-imports#nextjs',
+    docUrl: 'https://github.com/jagreehal/eslint-no-server-imports#nextjs',
   },
   astro: {
     name: 'Astro',
     // Using 'star' - valid Codicon, represents Astro's star logo
     icon: '$(star)',
-    docUrl: 'https://github.com/jagreehal/eslint-plugin-no-server-imports#astro',
+    docUrl: 'https://github.com/jagreehal/eslint-no-server-imports#astro',
   },
   sveltekit: {
     name: 'SvelteKit',
     // Using 'symbol-color' - valid Codicon for SvelteKit (colorful framework)
     icon: '$(symbol-color)',
-    docUrl: 'https://github.com/jagreehal/eslint-plugin-no-server-imports#sveltekit',
+    docUrl: 'https://github.com/jagreehal/eslint-no-server-imports#sveltekit',
   },
   unknown: {
     name: 'Unknown',
     // Using 'question' - valid Codicon for unknown/undetected framework
     icon: '$(question)',
-    docUrl: 'https://github.com/jagreehal/eslint-plugin-no-server-imports#readme',
+    docUrl: 'https://github.com/jagreehal/eslint-no-server-imports#readme',
   },
 };
 
