@@ -1,5 +1,11 @@
 # eslint-plugin-no-server-imports
 
+## 1.3.1
+
+### Patch Changes
+
+- [#108](https://github.com/jagreehal/eslint-no-server-imports/pull/108) [`293270e`](https://github.com/jagreehal/eslint-no-server-imports/commit/293270e695c45977479eedebe0dd13240a08662d) Thanks [@jagreehal](https://github.com/jagreehal)! - Point the rule docs URL and package links at github.com/jagreehal/eslint-no-server-imports.
+
 ## 1.3.0
 
 ### Minor Changes
