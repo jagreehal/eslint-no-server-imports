@@ -1,5 +1,11 @@
 # eslint-plugin-no-server-imports
 
+## 1.3.0
+
+### Minor Changes
+
+- [#106](https://github.com/jagreehal/eslint-no-server-imports/pull/106) [`187ac6d`](https://github.com/jagreehal/eslint-no-server-imports/commit/187ac6d836053ac7486cd8c69d8445ebdad2af2e) Thanks [@jagreehal](https://github.com/jagreehal)! - Detect TypeScript import-equals (`import fs = require('fs')`), ignore a locally declared `require`, and match file patterns inside dot-directories such as `.next/`.
+
 ## 1.2.0
 
 ### Minor Changes
