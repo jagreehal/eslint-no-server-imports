@@ -71,7 +71,7 @@ No background linting, no replacement for ESLint - just clarity.
 
 ## Related links
 
-- [`eslint-plugin-no-server-imports`](https://github.com/jagreehal/eslint-plugin-no-server-imports) - the rule itself
+- [`eslint-plugin-no-server-imports`](https://github.com/jagreehal/eslint-no-server-imports) - the rule itself
 - [ESLint VS Code extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) - required for lint results
 
 ## License

@@ -239,7 +239,7 @@ type MessageIds =
 type Options = [RuleOptions?];
 
 const createRule = ESLintUtils.RuleCreator(
-  () => 'https://github.com/jagreehal/eslint-plugin-no-server-imports#readme'
+  () => 'https://github.com/jagreehal/eslint-no-server-imports#readme'
 );
 
 /**

@@ -44,13 +44,13 @@
     "node-modules"
   ],
   "author": "Jag Reehal <jag@jagreehal.com>",
-  "homepage": "https://github.com/jagreehal/eslint-plugin-no-server-imports#readme",
+  "homepage": "https://github.com/jagreehal/eslint-no-server-imports#readme",
   "bugs": {
-    "url": "https://github.com/jagreehal/eslint-plugin-no-server-imports/issues"
+    "url": "https://github.com/jagreehal/eslint-no-server-imports/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jagreehal/eslint-plugin-no-server-imports.git"
+    "url": "git+https://github.com/jagreehal/eslint-no-server-imports.git"
   },
   "license": "MIT",
   "peerDependencies": {

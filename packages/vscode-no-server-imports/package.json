@@ -22,10 +22,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/jagreehal/eslint-plugin-no-server-imports"
+    "url": "https://github.com/jagreehal/eslint-no-server-imports"
   },
   "bugs": {
-    "url": "https://github.com/jagreehal/eslint-plugin-no-server-imports/issues"
+    "url": "https://github.com/jagreehal/eslint-no-server-imports/issues"
   },
   "main": "./dist/extension.js",
   "activationEvents": [
