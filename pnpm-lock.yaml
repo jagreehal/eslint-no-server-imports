@@ -5497,9 +5497,6 @@ packages:
   stable-hash@0.0.5:
     resolution: {integrity: sha512-+L3ccpzibovGXFK+Ap/f8LOS0ahMrHTf3xu7mMLSpEGU0EO9ucaysSylKo9eRDFNhWve/y275iPmIZ4z39a9iA==}
 
-  std-env@4.2.0:
-    resolution: {integrity: sha512-oCUKSupKTHX53EyjDtuZQ64pjLJ6yYCtpmEw0goYxtjG9KpbRe8KAsl2tBUGU9DyMcJ0RwJ8GqJAFzMXcXW1Rw==}
-
   std-env@4.3.0:
     resolution: {integrity: sha512-OtU/EgQ1kIm5KwqQpBC6ZEMXrZRui11w8zgfTWp8cdO9B8OaPsbA8bTHO2P+HNo1VlUTGMVBwPhydu6poeXiag==}
 
@@ -11437,8 +11434,6 @@ snapshots:
 
   stable-hash@0.0.5: {}
 
-  std-env@4.2.0: {}
-
   std-env@4.3.0: {}
 
   stdin-discarder@0.2.2: {}
@@ -11805,7 +11800,7 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
       fnv1a-64: 0.1.2
-      std-env: 4.2.0
+      std-env: 4.3.0
       undici: 8.12.2
 
   unist-util-is@6.0.1:
