@@ -1,18 +1,24 @@
 /**
- * ESLint Plugin: eslint-plugin-no-server-imports
- * ===============================================
- * Prevents server-only module imports in client code.
- * Catches bundling issues in your editor instead of at build time.
- *
- * @author Jag Reehal [@jagreehal] <jag@jagreehal.com>
- * @license MIT
- */
+ESLint Plugin: eslint-plugin-no-server-imports
+===============================================
+Prevents server-only module imports in client code.
+Catches bundling issues in your editor instead of at build time.
+
+@author Jag Reehal [@jagreehal] <jag@jagreehal.com>
+@license MIT
+*/
 
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import picomatch from 'picomatch';
 
-/** Default server-only modules that should not be imported in client code */
+// Match paths inside dot-directories (e.g. `.next/app/...`).
+const PICO_OPTIONS = { dot: true } as const;
+
+/**
+Default server-only modules that should not be imported in client code
+*/
+// Stryker disable all: static data table
 const DEFAULT_SERVER_MODULES = [
   // Logging
   'pino',
@@ -138,8 +144,11 @@ const DEFAULT_SERVER_MODULES = [
   'worker_threads',
   'node:worker_threads',
 ];
+// Stryker restore all
 
-/** Default file patterns that indicate server-only code */
+/**
+Default file patterns that indicate server-only code
+*/
 const DEFAULT_SERVER_FILE_PATTERNS = [
   '**/*.server.ts',
   '**/*.server.tsx',
@@ -149,7 +158,9 @@ const DEFAULT_SERVER_FILE_PATTERNS = [
   '**/_server/**',
 ];
 
-/** Default file patterns that indicate client code */
+/**
+Default file patterns that indicate client code
+*/
 const DEFAULT_CLIENT_FILE_PATTERNS = [
   '**/routes/**',
   '**/pages/**',
@@ -160,42 +171,64 @@ const DEFAULT_CLIENT_FILE_PATTERNS = [
   // We can't use '**/app/**' as it's too broad and matches paths like '/myapp/src/...'
 ];
 
-/** Configuration options for the no-server-imports rule */
+/**
+Configuration options for the no-server-imports rule
+*/
 export interface RuleOptions {
-  /** Additional server-only modules to check (merged with defaults) */
+  /**
+  Additional server-only modules to check (merged with defaults)
+  */
   serverModules?: string[];
-  /** Additional server-only file patterns to check (merged with defaults) */
+  /**
+  Additional server-only file patterns to check (merged with defaults)
+  */
   serverFilePatterns?: string[];
-  /** File patterns that indicate client code (overrides defaults if provided) */
+  /**
+  File patterns that indicate client code (overrides defaults if provided)
+  */
   clientFilePatterns?: string[];
-  /** File patterns to completely ignore */
+  /**
+  File patterns to completely ignore
+  */
   ignoreFiles?: string[];
-  /** Whether to check for 'server-only' import marker */
+  /**
+  Whether to check for 'server-only' import marker
+  */
   checkServerOnlyMarker?: boolean;
-  /** Whether to check for server function usage (createServerFn, etc.) */
+  /**
+  Whether to check for server function usage (createServerFn, etc.)
+  */
   checkServerFunctions?: boolean;
-  /** Server function names to check for */
+  /**
+  Server function names to check for
+  */
   serverFunctionNames?: string[];
-  /** Whether to report unused server-only imports (default: true) */
+  /**
+  Whether to report unused server-only imports (default: true)
+  */
   reportUnusedImports?: boolean;
-  /** File selection mode: 'client-only' checks only clientFilePatterns, 'all-non-server' checks all except server files */
+  /**
+  File selection mode: 'client-only' checks only clientFilePatterns, 'all-non-server' checks all except server files
+  */
   mode?: 'client-only' | 'all-non-server';
-  /** Next.js serverExternalPackages - merged into serverModules (for Next.js projects) */
+  /**
+  Next.js serverExternalPackages - merged into serverModules (for Next.js projects)
+  */
   serverExternalPackages?: string[];
   /**
-   * When true, the `'use client'` directive (not the file path) decides whether a
-   * file is client code. A file that declares `'use client'` is always checked,
-   * even outside clientFilePatterns; a file WITHOUT the directive that matches
-   * serverComponentPatterns is treated as a React Server Component and skipped
-   * (it may legitimately import server-only modules). Designed for the Next.js
-   * App Router, where client and server components are intermixed by path.
-   */
+  When true, the `'use client'` directive (not the file path) decides whether a
+  file is client code. A file that declares `'use client'` is always checked,
+  even outside clientFilePatterns; a file WITHOUT the directive that matches
+  serverComponentPatterns is treated as a React Server Component and skipped
+  (it may legitimately import server-only modules). Designed for the Next.js
+  App Router, where client and server components are intermixed by path.
+  */
   directiveAware?: boolean;
   /**
-   * Path patterns that are React Server Components by default and are only
-   * checked when they declare `'use client'`. Only used when `directiveAware`
-   * is true. Defaults to `clientFilePatterns`.
-   */
+  Path patterns that are React Server Components by default and are only
+  checked when they declare `'use client'`. Only used when `directiveAware`
+  is true. Defaults to `clientFilePatterns`.
+  */
   serverComponentPatterns?: string[];
 }
 
@@ -210,9 +243,9 @@ const createRule = ESLintUtils.RuleCreator(
 );
 
 /**
- * Checks if an import declaration has any value (non-type) specifiers.
- * Returns false if ALL specifiers are type-only imports.
- */
+Checks if an import declaration has any value (non-type) specifiers.
+Returns false if ALL specifiers are type-only imports.
+*/
 function hasValueImportSpecifiers(node: TSESTree.ImportDeclaration): boolean {
   // If the whole import is type-only, no value specifiers
   if (node.importKind === 'type') {
@@ -242,9 +275,9 @@ function hasValueImportSpecifiers(node: TSESTree.ImportDeclaration): boolean {
 }
 
 /**
- * Checks if an export declaration has any value (non-type) specifiers.
- * Returns false if ALL specifiers are type-only exports.
- */
+Checks if an export declaration has any value (non-type) specifiers.
+Returns false if ALL specifiers are type-only exports.
+*/
 function hasValueExportSpecifiers(node: TSESTree.ExportNamedDeclaration): boolean {
   // If the whole export is type-only, no value specifiers
   if (node.exportKind === 'type') {
@@ -263,8 +296,8 @@ function hasValueExportSpecifiers(node: TSESTree.ExportNamedDeclaration): boolea
 }
 
 /**
- * Gets the local names of value imports from an import declaration
- */
+Gets the local names of value imports from an import declaration
+*/
 function getValueImportNames(node: TSESTree.ImportDeclaration): string[] {
   if (node.importKind === 'type') {
     return [];
@@ -290,8 +323,8 @@ function getValueImportNames(node: TSESTree.ImportDeclaration): string[] {
 }
 
 /**
- * Checks if a node is inside a given scope (function/arrow function)
- */
+Checks if a node is inside a given scope (function/arrow function)
+*/
 function isNodeInsideScope(node: TSESTree.Node, scopeNode: TSESTree.Node): boolean {
   let current: TSESTree.Node | undefined = node;
   while (current) {
@@ -304,8 +337,8 @@ function isNodeInsideScope(node: TSESTree.Node, scopeNode: TSESTree.Node): boole
 }
 
 /**
- * Checks if a node is a directive prologue (e.g., 'use client', 'use strict')
- */
+Checks if a node is a directive prologue (e.g., 'use client', 'use strict')
+*/
 function isDirectivePrologue(node: TSESTree.Statement): boolean {
   return (
     node.type === AST_NODE_TYPES.ExpressionStatement &&
@@ -315,8 +348,8 @@ function isDirectivePrologue(node: TSESTree.Statement): boolean {
 }
 
 /**
- * Checks if the file has a 'use client' directive
- */
+Checks if the file has a 'use client' directive
+*/
 function hasUseClientDirective(sourceCode: TSESLint.SourceCode): boolean {
   const ast = sourceCode.ast;
   if (!ast.body || ast.body.length === 0) return false;
@@ -330,12 +363,12 @@ function hasUseClientDirective(sourceCode: TSESLint.SourceCode): boolean {
 }
 
 /**
- * Finds the best node to insert the server-only marker before
- * Respects shebangs, file comments, directive prologues, and existing imports
- *
- * @param sourceCode - The source code object
- * @returns The node to insert before, or null to insert at start
- */
+Finds the best node to insert the server-only marker before
+Respects shebangs, file comments, directive prologues, and existing imports
+
+@param sourceCode - The source code object
+@returns The node to insert before, or null to insert at start
+*/
 function findServerOnlyMarkerInsertNode(
   sourceCode: TSESLint.SourceCode
 ): TSESTree.Node | null {
@@ -365,10 +398,10 @@ function findServerOnlyMarkerInsertNode(
 }
 
 /**
- * Creates a server-only marker suggestion if appropriate.
- * Returns empty array if file has 'use client' directive (conflicts with server-only).
- * Returns no-op suggestion if marker already exists (ESLint still counts it).
- */
+Creates a server-only marker suggestion if appropriate.
+Returns empty array if file has 'use client' directive (conflicts with server-only).
+Returns no-op suggestion if marker already exists (ESLint still counts it).
+*/
 function createServerOnlyMarkerSuggestion(
   sourceCode: TSESLint.SourceCode
 ): TSESLint.SuggestionReportDescriptor<MessageIds>[] {
@@ -403,13 +436,11 @@ function createServerOnlyMarkerSuggestion(
 }
 
 /**
- * Creates suggestion objects for import violations.
- * Note: Dynamic import suggestion was removed because it doesn't fix the issue -
- * it still executes server code in the client bundle.
- *
- * @param sourceCode - The source code object for finding insert positions
- * @returns Array of suggestion descriptors
- */
+Creates suggestion objects for import violations.
+
+@param sourceCode - The source code object for finding insert positions
+@returns Array of suggestion descriptors
+*/
 function createImportSuggestions(
   sourceCode: TSESLint.SourceCode
 ): TSESLint.SuggestionReportDescriptor<MessageIds>[] {
@@ -417,9 +448,9 @@ function createImportSuggestions(
 }
 
 /**
- * Creates suggestion objects for side-effect import violations (import 'fs').
- * Only offers server-only marker since side-effect imports can't be converted.
- */
+Creates suggestion objects for side-effect import violations (import 'fs').
+Only offers server-only marker since side-effect imports can't be converted.
+*/
 function createSideEffectImportSuggestions(
   _moduleName: string,
   sourceCode: TSESLint.SourceCode
@@ -428,8 +459,8 @@ function createSideEffectImportSuggestions(
 }
 
 /**
- * Creates suggestion objects for require violations.
- */
+Creates suggestion objects for require violations.
+*/
 function createRequireSuggestions(
   sourceCode: TSESLint.SourceCode
 ): TSESLint.SuggestionReportDescriptor<MessageIds>[] {
@@ -437,8 +468,8 @@ function createRequireSuggestions(
 }
 
 /**
- * Creates suggestion objects for re-export violations.
- */
+Creates suggestion objects for re-export violations.
+*/
 function createReexportSuggestions(
   sourceCode: TSESLint.SourceCode
 ): TSESLint.SuggestionReportDescriptor<MessageIds>[] {
@@ -584,11 +615,11 @@ export const rule = createRule<Options, MessageIds>({
     const serverFunctionScopes = new Set<TSESTree.Node>();
 
     /**
-     * Checks if the current file should be ignored
-     */
+    Checks if the current file should be ignored
+    */
     function shouldIgnoreFile(): boolean {
       if (ignoreFiles.length > 0) {
-        const isMatch = picomatch(ignoreFiles);
+        const isMatch = picomatch(ignoreFiles, PICO_OPTIONS);
         if (isMatch(filename)) {
           return true;
         }
@@ -597,33 +628,33 @@ export const rule = createRule<Options, MessageIds>({
     }
 
     /**
-     * Checks if the file is a server-only file (based on patterns)
-     */
+    Checks if the file is a server-only file (based on patterns)
+    */
     function isServerFile(): boolean {
-      const isMatch = picomatch(serverFilePatterns);
+      const isMatch = picomatch(serverFilePatterns, PICO_OPTIONS);
       return isMatch(filename);
     }
 
     /**
-     * Checks if the file is a client file (based on patterns)
-     */
+    Checks if the file is a client file (based on patterns)
+    */
     function isClientFile(): boolean {
-      const isMatch = picomatch(clientFilePatterns);
+      const isMatch = picomatch(clientFilePatterns, PICO_OPTIONS);
       return isMatch(filename);
     }
 
     /**
-     * Checks if the file is a React Server Component by path (used only in
-     * directiveAware mode to skip files that omit the 'use client' directive).
-     */
+    Checks if the file is a React Server Component by path (used only in
+    directiveAware mode to skip files that omit the 'use client' directive).
+    */
     function isServerComponentFile(): boolean {
-      const isMatch = picomatch(serverComponentPatterns);
+      const isMatch = picomatch(serverComponentPatterns, PICO_OPTIONS);
       return isMatch(filename);
     }
 
     /**
-     * Checks if an import source is a server-only module
-     */
+    Checks if an import source is a server-only module
+    */
     function isServerOnlyModule(importSource: string): boolean {
       // O(1) check for exact match
       if (serverModuleSet.has(importSource)) {
@@ -636,9 +667,9 @@ export const rule = createRule<Options, MessageIds>({
     }
 
     /**
-     * Recursively finds the root server function call from a chained call
-     * e.g., createServerFn().handler() -> finds createServerFn()
-     */
+    Recursively finds the root server function call from a chained call
+    e.g., createServerFn().handler() -> finds createServerFn()
+    */
     function findServerFunctionCall(node: TSESTree.CallExpression): TSESTree.CallExpression | null {
       // Check for direct call: createServerFn()
       if (
@@ -658,8 +689,8 @@ export const rule = createRule<Options, MessageIds>({
     }
 
     /**
-     * Extracts all function/arrow function arguments from a call expression chain
-     */
+    Extracts all function/arrow function arguments from a call expression chain
+    */
     function extractCallbacksFromChain(node: TSESTree.CallExpression): TSESTree.Node[] {
       const callbacks: TSESTree.Node[] = [];
 
@@ -691,18 +722,62 @@ export const rule = createRule<Options, MessageIds>({
     }
 
     /**
-     * Gets the string value from a require() call argument
-     */
+    Checks whether `require` is locally shadowed at the given identifier
+    (e.g. by `function require(m) {...}` or a parameter). If the reference
+    resolves to a variable with definitions in any enclosing scope, the
+    global CommonJS `require` is not what's being called.
+    */
+    function isRequireShadowed(callee: TSESTree.Identifier): boolean {
+      let scope: TSESLint.Scope.Scope | null = sourceCode.getScope(callee);
+      while (scope) {
+        const variable = scope.set.get('require');
+        if (variable && variable.defs.length > 0) {
+          return true;
+        }
+        scope = scope.upper;
+      }
+      return false;
+    }
+
+    /**
+    Gets the string value from a require() call argument.
+    Only treats *global* `require` as CommonJS - a locally shadowed
+    `require` (e.g. `function require(m) {...}`) is not module loading.
+    */
     function getRequireSource(node: TSESTree.CallExpression): string | null {
       if (
         node.callee.type === AST_NODE_TYPES.Identifier &&
         node.callee.name === 'require' &&
         node.arguments.length > 0
       ) {
+        if (isRequireShadowed(node.callee)) {
+          return null;
+        }
         const arg = node.arguments[0];
         if (arg.type === AST_NODE_TYPES.Literal && typeof arg.value === 'string') {
           return arg.value;
         }
+      }
+      return null;
+    }
+
+    /**
+    Gets the module source from a TypeScript import-equals declaration:
+    `import fs = require('fs')` / `import type Database = require('better-sqlite3')`
+    */
+    function getImportEqualsModule(
+      node: TSESTree.TSImportEqualsDeclaration
+    ): { source: string; literal: TSESTree.Node } | null {
+      const moduleReference = node.moduleReference;
+      if (moduleReference.type !== AST_NODE_TYPES.TSExternalModuleReference) {
+        return null;
+      }
+      const expression = moduleReference.expression;
+      if (
+        expression.type === AST_NODE_TYPES.Literal &&
+        typeof expression.value === 'string'
+      ) {
+        return { source: expression.value, literal: expression };
       }
       return null;
     }
@@ -729,9 +804,9 @@ export const rule = createRule<Options, MessageIds>({
 
     // File selection based on mode
     if (
+      !isDirectiveClient && // a 'use client' file is client even outside clientFilePatterns
       mode === 'client-only' && // Only check files matching clientFilePatterns
-      !isClientFile() &&
-      !isDirectiveClient // a 'use client' file is client even outside clientFilePatterns
+      !isClientFile()
     ) {
       return {};
     }
@@ -740,7 +815,11 @@ export const rule = createRule<Options, MessageIds>({
     // Track require() calls with their variables (like imports)
     type ServerRequire = {
       module: string;
-      node: TSESTree.CallExpression;
+      node: TSESTree.Node;
+      /**
+      Node to report (the module string literal)
+      */
+      reportNode: TSESTree.Node;
       variables: readonly TSESLint.Scope.Variable[];
     };
     const serverOnlyRequires: ServerRequire[] = [];
@@ -815,6 +894,45 @@ export const rule = createRule<Options, MessageIds>({
         }
       },
 
+      // TypeScript import-equals: `import fs = require('fs')`
+      TSImportEqualsDeclaration(node) {
+        // `import type X = require(...)` is erased at compile time
+        if (node.importKind === 'type') {
+          return;
+        }
+
+        const moduleRef = getImportEqualsModule(node);
+        if (!moduleRef) {
+          return;
+        }
+        const { source, literal } = moduleRef;
+
+        // Check for marker import
+        if (checkServerOnlyMarker && source === 'server-only') {
+          hasServerOnlyImport = true;
+          return;
+        }
+
+        if (!isServerOnlyModule(source)) {
+          return;
+        }
+
+        const variables = sourceCode.getDeclaredVariables(node);
+        if (variables.length > 0) {
+          serverOnlyRequires.push({
+            module: source,
+            node,
+            reportNode: literal,
+            variables,
+          });
+        } else {
+          bareRequireViolations.push({
+            node: literal,
+            module: source,
+          });
+        }
+      },
+
       CallExpression(node) {
         // Check for require() calls
         const requireSource = getRequireSource(node);
@@ -838,6 +956,7 @@ export const rule = createRule<Options, MessageIds>({
                   serverOnlyRequires.push({
                     module: requireSource,
                     node,
+                    reportNode: node.arguments[0],
                     variables,
                   });
                   return;
@@ -941,7 +1060,7 @@ export const rule = createRule<Options, MessageIds>({
         }
 
         // Check each server-only require and ensure all usages stay inside server scopes
-        for (const { module, node, variables } of serverOnlyRequires) {
+        for (const { module, node, reportNode, variables } of serverOnlyRequires) {
           // If the require() call itself is inside a server scope, it's safe
           // (the variable is scoped to the server callback and can't escape)
           if (isInsideServerScope(node)) {
@@ -977,7 +1096,7 @@ export const rule = createRule<Options, MessageIds>({
 
           if (hasViolation) {
             context.report({
-              node: node.arguments[0],
+              node: reportNode,
               messageId: 'serverOnlyRequire',
               data: { module },
               suggest: createRequireSuggestions(sourceCode),
@@ -1039,16 +1158,18 @@ export type { DetectedFramework, FrameworkDefaults } from './framework-detection
 
 import { FRAMEWORK_DEFAULTS } from './framework-detection';
 
-/** Plugin configuration */
+/**
+Plugin configuration
+*/
 const plugin = {
   rules: {
     'no-server-imports': rule,
   },
   configs: {
     /**
-     * Recommended config - uses sensible defaults that work across frameworks.
-     * For framework-specific optimizations, use one of the framework presets.
-     */
+    Recommended config - uses sensible defaults that work across frameworks.
+    For framework-specific optimizations, use one of the framework presets.
+    */
     recommended: {
       plugins: ['no-server-imports'],
       rules: {
@@ -1057,9 +1178,9 @@ const plugin = {
     },
 
     /**
-     * Next.js optimized configuration.
-     * Best for Next.js App Router and Pages Router projects.
-     */
+    Next.js optimized configuration.
+    Best for Next.js App Router and Pages Router projects.
+    */
     'recommended-next': {
       plugins: ['no-server-imports'],
       rules: {
@@ -1074,9 +1195,9 @@ const plugin = {
     },
 
     /**
-     * Astro optimized configuration.
-     * Best for Astro projects with islands architecture.
-     */
+    Astro optimized configuration.
+    Best for Astro projects with islands architecture.
+    */
     'recommended-astro': {
       plugins: ['no-server-imports'],
       rules: {
@@ -1091,9 +1212,9 @@ const plugin = {
     },
 
     /**
-     * SvelteKit optimized configuration.
-     * Best for SvelteKit projects.
-     */
+    SvelteKit optimized configuration.
+    Best for SvelteKit projects.
+    */
     'recommended-sveltekit': {
       plugins: ['no-server-imports'],
       rules: {
@@ -1108,9 +1229,9 @@ const plugin = {
     },
 
     /**
-     * TanStack Start optimized configuration.
-     * Best for TanStack Start projects using createServerFn.
-     */
+    TanStack Start optimized configuration.
+    Best for TanStack Start projects using createServerFn.
+    */
     'recommended-tanstack-start': {
       plugins: ['no-server-imports'],
       rules: {

@@ -101,3 +101,6 @@ apps/*/.vercel/
 packages/*/node_modules/
 packages/*/dist/
 packages/*/lib/
+# Stryker mutation testing
+.stryker-tmp/
+reports/

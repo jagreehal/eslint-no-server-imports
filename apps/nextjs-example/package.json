@@ -9,23 +9,23 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.2.10",
-    "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
-    "@prisma/client": "^7.5.0",
+    "@prisma/client": "^7.10.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@typescript-eslint/utils": "^8.57.2",
+    "@typescript-eslint/utils": "^8.71.2",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^10.7.0",
-    "eslint-config-next": "16.2.10",
+    "eslint": "^10.12.0",
+    "eslint-config-next": "16.4.2",
     "eslint-plugin-no-server-imports": "workspace:*",
-    "pino": "^10.3.1",
+    "pino": "^10.4.0",
     "tailwindcss": "^4",
-    "typescript": "^7"
+    "typescript": "^6.0.3"
   }
 }

@@ -12,15 +12,12 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'ci: version packages')"
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10.24.0
 
       - uses: actions/setup-node@v4
         with:
