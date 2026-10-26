@@ -26,7 +26,7 @@
     "eslint-plugin-no-server-imports": "workspace:*",
     "pino": "^10.4.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.2",
+    "typescript-eslint": "^8.72.0",
     "vite": "^8.3.4"
   }
 }
