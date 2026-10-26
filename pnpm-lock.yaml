@@ -5447,9 +5447,9 @@ packages:
     peerDependencies:
       seroval: ^1.0
 
-  seroval@1.6.9:
-    resolution: {integrity: sha512-UeEzHwAK+yl0YLbsvROV1t5yMYEwZZ0CfKYxDvUgS2fO9Vxdf8djqVIB+OuVpuawRNPqw68LE1Du/GMsW2ZPqA==}
-    engines: {node: '>=10'}
+  seroval@1.7.1:
+    resolution: {integrity: sha512-tSRMcPkD/bu1rmY0/XfFP2zLPD8jXVuzHli6Y2UFi9AiG/d0kOd8LAc/G6NolpW8MA1PtgDUhywKCmerS4E3tg==}
+    engines: {node: '>=20'}
 
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
@@ -8151,15 +8151,15 @@ snapshots:
     dependencies:
       '@tanstack/history': 1.162.5
       cookie-es: 3.1.1
-      seroval: 1.6.9
-      seroval-plugins: 1.7.1(seroval@1.6.9)
+      seroval: 1.7.1
+      seroval-plugins: 1.7.1(seroval@1.7.1)
 
   '@tanstack/router-core@1.171.39':
     dependencies:
       '@tanstack/history': 1.162.5
       cookie-es: 3.1.1
-      seroval: 1.6.9
-      seroval-plugins: 1.6.9(seroval@1.6.9)
+      seroval: 1.7.1
+      seroval-plugins: 1.6.9(seroval@1.7.1)
 
   '@tanstack/router-generator@1.167.45(supports-color@7.2.0)':
     dependencies:
@@ -8216,7 +8216,7 @@ snapshots:
       '@tanstack/router-core': 1.171.38
       '@tanstack/start-fn-stubs': 1.162.0
       '@tanstack/start-storage-context': 1.167.40
-      seroval: 1.6.9
+      seroval: 1.7.1
 
   '@tanstack/start-fn-stubs@1.162.0': {}
 
@@ -8235,7 +8235,7 @@ snapshots:
       lightningcss: 1.33.0
       pathe: 2.0.3
       picomatch: 4.0.7
-      seroval: 1.6.9
+      seroval: 1.7.1
       source-map: 0.7.6
       srvx: 1.0.6
       tinyglobby: 0.2.17
@@ -8266,7 +8266,7 @@ snapshots:
       '@tanstack/start-storage-context': 1.167.40
       cookie-es: 3.1.1
       fetchdts: 0.2.0
-      seroval: 1.6.9
+      seroval: 1.7.1
 
   '@tanstack/start-storage-context@1.167.40':
     dependencies:
@@ -11376,15 +11376,15 @@ snapshots:
 
   semver@7.8.5: {}
 
-  seroval-plugins@1.6.9(seroval@1.6.9):
+  seroval-plugins@1.6.9(seroval@1.7.1):
     dependencies:
-      seroval: 1.6.9
+      seroval: 1.7.1
 
-  seroval-plugins@1.7.1(seroval@1.6.9):
+  seroval-plugins@1.7.1(seroval@1.7.1):
     dependencies:
-      seroval: 1.6.9
+      seroval: 1.7.1
 
-  seroval@1.6.9: {}
+  seroval@1.7.1: {}
 
   set-function-length@1.2.2:
     dependencies:
