@@ -195,8 +195,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
       '@typescript-eslint/utils':
-        specifier: ^8.71.2
-        version: 8.71.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+        specifier: ^8.72.0
+        version: 8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       eslint:
         specifier: ^10.13.0
         version: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
@@ -244,8 +244,8 @@ importers:
         specifier: ^19
         version: 19.3.0(@types/react@19.3.0)
       '@typescript-eslint/utils':
-        specifier: ^8.71.2
-        version: 8.71.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+        specifier: ^8.72.0
+        version: 8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       babel-plugin-react-compiler:
         specifier: 1.0.0
         version: 1.0.0
@@ -283,8 +283,8 @@ importers:
         specifier: ^7.3.1
         version: 7.3.1(svelte@5.57.2(@typescript-eslint/types@8.65.0))(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0))
       '@typescript-eslint/utils':
-        specifier: ^8.71.2
-        version: 8.71.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+        specifier: ^8.72.0
+        version: 8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       eslint:
         specifier: ^10
         version: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
@@ -341,8 +341,8 @@ importers:
         specifier: ^19
         version: 19.3.0(@types/react@19.3.0)
       '@typescript-eslint/utils':
-        specifier: ^8.71.2
-        version: 8.71.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+        specifier: ^8.72.0
+        version: 8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@vitejs/plugin-react':
         specifier: ^6.1.2
         version: 6.1.2(babel-plugin-react-compiler@1.0.0)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0))
@@ -405,8 +405,8 @@ importers:
         specifier: ^8.71.2
         version: 8.71.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@typescript-eslint/utils':
-        specifier: ^8.71.2
-        version: 8.71.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+        specifier: ^8.72.0
+        version: 8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@vitest/coverage-v8':
         specifier: ^5.0.5
         version: 5.0.5(vitest@5.0.5)
@@ -5449,6 +5449,12 @@ packages:
     resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
     hasBin: true
+
+  seroval-plugins@1.6.9:
+    resolution: {integrity: sha512-kiDK/Tb8IWZ61WEU8pA2PDmAuw37gKph9Y77OZlD56mg0Y2g0Bg7gZ1HeHhs5d40w+nRoUq/wj08V26ilbez9g==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      seroval: ^1.0
 
   seroval-plugins@1.7.1:
     resolution: {integrity: sha512-5EiMqQiw2/KqzTCyJNdpMvBFbKlidtcinyRwZg77pW5Z+QllOp2JUkEpTdThkdsEFXsPGf8ofTpu5yC1kXwv0g==}
@@ -11396,6 +11402,10 @@ snapshots:
   semver@7.8.4: {}
 
   semver@7.8.5: {}
+
+  seroval-plugins@1.6.9(seroval@1.6.9):
+    dependencies:
+      seroval: 1.6.9
 
   seroval-plugins@1.7.1(seroval@1.6.9):
     dependencies:
